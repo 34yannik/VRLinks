@@ -51,11 +51,6 @@
 
                 <!-- Überschrift + Config Button -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
-                    <TextBlock Text="Lists"
-                       Foreground="White"
-                       FontWeight="Bold"
-                       FontSize="16"
-                       VerticalAlignment="Center"/>
 
                     <!-- Config Button -->
                     <Button Content="⚙"
