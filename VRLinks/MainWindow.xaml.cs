@@ -88,7 +88,6 @@ namespace VRLinks
             if (sender is Button btn && btn.DataContext is LinkItem link)
             {
                 Clipboard.SetText(link.Url);
-                MessageBox.Show($"Link copied: {link.Url}");
             }
         }
 
