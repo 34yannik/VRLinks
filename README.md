@@ -18,16 +18,6 @@ I built this for fun because I needed a quick way to store some links for VRChat
 
 ---
 
-## Screenshots
-
-Here are some screenshots of the app in action:
-
-### Main Window
-
-![Main Window](images/main-window.png)
-
----
-
 ## Installation
 
 1. Clone or download the repository.  
