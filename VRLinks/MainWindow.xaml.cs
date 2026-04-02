@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace VRLinks
@@ -52,22 +54,34 @@ namespace VRLinks
                 return;
             }
 
-            // check for duplicate link names
             if (CurrentList.Links.Any(l => string.Equals(l.Name, name, StringComparison.OrdinalIgnoreCase)))
             {
                 MessageBox.Show("A link with this name already exists!");
                 return;
             }
 
-            CurrentList.Links.Add(new LinkItem(name, url));
-            DataManager.Save(Lists); // save automatically
+            var tags = new ObservableCollection<string>(
+                TagsTextBox.Text
+                    .Split(',')
+                    .Select(t => t.Trim())
+                    .Where(t => !string.IsNullOrWhiteSpace(t))
+                    .Distinct()
+            );
 
-            // reset input boxes
+            var link = new LinkItem(name, url, tags);
+
+            CurrentList.Links.Add(link);
+            DataManager.Save(Lists);
+
+            // Reset
             NameTextBox.Text = "Name";
             NameTextBox.Foreground = Brushes.Gray;
 
             UrlTextBox.Text = "https://";
             UrlTextBox.Foreground = Brushes.Gray;
+
+            TagsTextBox.Text = "tag1, tag2";
+            TagsTextBox.Foreground = Brushes.Gray;
         }
 
         // clear all links in current list
@@ -167,6 +181,34 @@ namespace VRLinks
             catch (Exception ex)
             {
                 MessageBox.Show("Error opening folder: " + ex.Message);
+            }
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ApplyFilter();
+        }
+
+
+        private void ApplyFilter()
+        {
+            if (CurrentList == null) return;
+
+            string search = SearchTextBox.Text?.ToLower() ?? "";
+
+            var filtered = CurrentList.Links.Where(link =>
+                link.Name.ToLower().Contains(search) ||
+                 link.Url.ToLower().Contains(search)
+            );
+
+            LinksListView.ItemsSource = new ObservableCollection<LinkItem>(filtered);
+        }
+
+        private void Item_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is Border b && b.DataContext is LinkItem link)
+            {
+                Clipboard.SetText(link.Url);
             }
         }
 

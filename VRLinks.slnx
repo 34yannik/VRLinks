@@ -1,6 +1,3 @@
 <Solution>
-  <Folder Name="/images/">
-    <File Path="../../../AppData/Local/Packages/MicrosoftWindows.Client.Core_cw5n1h2txyewy/TempState/ScreenClip/main-window.png" />
-  </Folder>
-  <Project Path="VRLinks/VRLinks.csproj" />
+  <Project Path="VRLinks/VRLinks.csproj" Id="a97bed08-6e60-424a-b16c-98bd70f39261" />
 </Solution>

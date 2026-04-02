@@ -10,30 +10,41 @@ namespace VRLinks
 {
     public static class DataManager
     {
-        // file path where all data is stored
         public static readonly string SaveFile = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "VRLinks", "links.xml");
 
-        /// <summary>
-        /// load lists from file, or create default "Favorites"
-        /// </summary>
         public static ObservableCollection<LinkList> Load()
         {
             try
             {
                 if (File.Exists(SaveFile))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<LinkList>));
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<SerializableLinkList>));
                     using (FileStream fs = new FileStream(SaveFile, FileMode.Open))
                     {
-                        var loadedLists = (List<LinkList>)serializer.Deserialize(fs);
-                        return new ObservableCollection<LinkList>(loadedLists ?? new List<LinkList>());
+                        var loaded = (List<SerializableLinkList>)serializer.Deserialize(fs);
+
+                        // Convert to ObservableCollection<LinkList>
+                        var obsLists = new ObservableCollection<LinkList>();
+                        foreach (var sl in loaded)
+                        {
+                            var list = new LinkList { Name = sl.Name };
+                            foreach (var li in sl.Links)
+                            {
+                                var link = new LinkItem(li.Name, li.Url);
+                                foreach (var tag in li.Tags ?? new List<string>())
+                                    link.Tags.Add(tag);
+                                list.Links.Add(link);
+                            }
+                            obsLists.Add(list);
+                        }
+
+                        return obsLists;
                     }
                 }
                 else
                 {
-                    // create default favorites if no file exists
                     var fav = new LinkList { Name = "Favorites" };
                     fav.Links.Add(new LinkItem("YouTube", "https://youtube.com"));
                     fav.Links.Add(new LinkItem("Twitch", "https://twitch.tv"));
@@ -49,9 +60,6 @@ namespace VRLinks
             }
         }
 
-        /// <summary>
-        /// save lists to XML file
-        /// </summary>
         public static void Save(ObservableCollection<LinkList> lists)
         {
             try
@@ -60,17 +68,22 @@ namespace VRLinks
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
-                // convert ObservableCollection to List for serialization
-                var listsToSave = lists.Select(l => new LinkList
+                // Convert to serializable type
+                var serializableLists = lists.Select(l => new SerializableLinkList
                 {
                     Name = l.Name,
-                    Links = new ObservableCollection<LinkItem>(l.Links)
+                    Links = l.Links.Select(li => new SerializableLinkItem
+                    {
+                        Name = li.Name,
+                        Url = li.Url,
+                        Tags = li.Tags.ToList()
+                    }).ToList()
                 }).ToList();
 
-                XmlSerializer serializer = new XmlSerializer(typeof(List<LinkList>));
+                XmlSerializer serializer = new XmlSerializer(typeof(List<SerializableLinkList>));
                 using (FileStream fs = new FileStream(SaveFile, FileMode.Create))
                 {
-                    serializer.Serialize(fs, listsToSave);
+                    serializer.Serialize(fs, serializableLists);
                 }
             }
             catch (Exception ex)
@@ -78,5 +91,24 @@ namespace VRLinks
                 MessageBox.Show("Error saving data: " + ex.Message);
             }
         }
+
+        #region Serializable Helper Classes
+
+        [Serializable]
+        public class SerializableLinkList
+        {
+            public string Name { get; set; }
+            public List<SerializableLinkItem> Links { get; set; } = new List<SerializableLinkItem>();
+        }
+
+        [Serializable]
+        public class SerializableLinkItem
+        {
+            public string Name { get; set; }
+            public string Url { get; set; }
+            public List<string> Tags { get; set; } = new List<string>();
+        }
+
+        #endregion
     }
 }

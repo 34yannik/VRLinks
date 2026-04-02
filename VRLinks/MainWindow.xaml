@@ -3,40 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="VRLinks"
         Height="600" Width="600"
-        MinHeight="300" MinWidth="400"
-        ResizeMode="CanResize"
-        WindowStartupLocation="CenterScreen"
         Background="#1E1E1E">
 
     <Window.Resources>
-        <!-- Style für ListBoxItems der Sidebar -->
-        <Style x:Key="SidebarListItemStyle" TargetType="ListBoxItem">
-            <Setter Property="Margin" Value="0,2,0,2"/>
-            <Setter Property="Padding" Value="6"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="Background" Value="Transparent"/>
+
+        <!-- TAG STYLE -->
+        <Style x:Key="TagStyle" TargetType="Border">
+            <Setter Property="Background" Value="#2E2E2E"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="8,3"/>
+            <Setter Property="Margin" Value="0,0,6,6"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
-                        <Border x:Name="Bd"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#3A85FF"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#2A7FFF"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3A85FF"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
+
     </Window.Resources>
 
     <Grid Margin="10">
@@ -45,202 +29,165 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- LINKSLISTEN (Sidebar) -->
-        <Border Grid.Column="0" Background="#1E1E1E" CornerRadius="6" Padding="8" Margin="0,0,10,0">
+        <!-- SIDEBAR -->
+        <Border Grid.Column="0" Background="#1E1E1E" Padding="8">
             <StackPanel>
 
-                <!-- Überschrift + Config Button -->
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
-
-                    <!-- Config Button -->
-                    <Button Content="⚙"
-                        Width="28"
+                <Button Content="⚙"
                         Height="28"
-                        Margin="5,0,0,0"
-                        FontSize="16"
                         Background="#2E2E2E"
                         Foreground="White"
-                        BorderThickness="0"
-                        Cursor="Hand"
-                        ToolTip="Öffne Speicherordner"
                         Click="ConfigButton_Click"/>
-                </StackPanel>
-                <!-- Überschrift -->
+
                 <TextBlock Text="Lists"
-                   Foreground="White"
-                   FontWeight="Bold"
-                   Margin="0,0,0,8"/>
+                           Foreground="White"
+                           Margin="0,10,0,5"/>
 
-                <!-- ListBox für vorhandene Listen -->
                 <ListBox Name="ListsListBox"
-                     SelectionChanged="ListsListBox_SelectionChanged"
-                     Background="#252525"
-                     BorderThickness="0"
-                     Foreground="White"
-                     Margin="0,0,0,8"
-                     FontSize="14"
-                     ItemContainerStyle="{StaticResource SidebarListItemStyle}"
-                     Height="Auto"/>
+                         SelectionChanged="ListsListBox_SelectionChanged"
+                         Background="#252525"
+                         Foreground="White"/>
 
-                    <!-- Button zum Hinzufügen einer neuen Liste -->
-                <Border Background="#3A85FF" CornerRadius="4">
-                    <Button Content="+ Add List"
-                        Background="Transparent"
-                        BorderThickness="0"
+                <Button Content="+ Add List"
+                        Background="#3A85FF"
                         Foreground="White"
-                        Cursor="Hand"
-                        Height="36"
-                        FontSize="16"
-                        Padding="10,4"
+                        Margin="0,5,0,0"
                         Click="AddList_Click"/>
-                </Border>
 
             </StackPanel>
         </Border>
 
-        <!-- HAUPTBEREICH -->
-        <DockPanel Grid.Column="1" Margin="10,0,0,0">
+        <!-- MAIN -->
+        <Grid Grid.Column="1" Margin="10,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <!-- TOP AREA (Input) -->
-            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,10">
-
-                <StackPanel Orientation="Horizontal">
-                    <!-- Name -->
-                    <Border Background="#2E2E2E" CornerRadius="5" Margin="0,0,5,0">
-                        <TextBox Name="NameTextBox"
-                                 Width="110"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 Foreground="Gray"
-                                 Padding="6"
-                                 Text="Name"
-                                 GotFocus="TextBox_GotFocus"
-                                 LostFocus="TextBox_LostFocus"/>
-                    </Border>
-
-                    <!-- URL -->
-                    <Border Background="#2E2E2E" CornerRadius="5" Margin="0,0,5,0">
-                        <TextBox Name="UrlTextBox"
-                                 Width="180"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 Foreground="Gray"
-                                 Padding="6"
-                                 Text="https://"
-                                 GotFocus="TextBox_GotFocus"
-                                 LostFocus="TextBox_LostFocus"/>
-                    </Border>
-
-                    <!-- Add Button -->
-                    <Border Background="#3A85FF" CornerRadius="5">
-                        <Button Content="Add"
-                                Width="60"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Foreground="White"
-                                Cursor="Hand"
-                                Click="AddButton_Click"/>
-                    </Border>
-                </StackPanel>
-
-                <!-- Clear Button -->
-                <Border Background="#FF4444" CornerRadius="5" HorizontalAlignment="Right" Margin="0,5,0,0">
-                    <Button Content="Clear All"
-                            Width="100"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Foreground="White"
-                            Cursor="Hand"
-                            Click="ClearButton_Click"/>
+            <!-- SEARCH -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                <Border Background="#2E2E2E" CornerRadius="5">
+                    <TextBox Name="SearchTextBox"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Foreground="White"
+                             Padding="6"
+                             TextChanged="SearchTextBox_TextChanged"/>
                 </Border>
-
             </StackPanel>
 
-            <!-- LINKS LIST -->
-            <ListView Name="LinksListView"
+            <!-- LIST VIEW -->
+            <ListView Grid.Row="1"
+                      Name="LinksListView"
                       Background="#252525"
                       BorderThickness="0">
 
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border Background="#333333"
-                CornerRadius="6"
-                Padding="8"
-                Margin="0,0,0,6">
-
-                            <StackPanel>
-
-                                <!-- ERSTE REIHE: Name + Copy -->
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" MaxWidth="180"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Text="{Binding Name}"
-                               Foreground="White"
-                               FontWeight="SemiBold"
-                               TextTrimming="CharacterEllipsis"
-                               ToolTip="{Binding Name}"/>
-
-                                    <Border Grid.Column="1" Background="#3A85FF" CornerRadius="4">
-                                        <Button Content="Copy"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Foreground="White"
-                                Padding="6,2"
+                                CornerRadius="6"
+                                Padding="8"
+                                Margin="0,0,0,6"
+                                Width="400"
+                                MinHeight="100"
                                 Cursor="Hand"
-                                Click="CopyButton_Click"/>
-                                    </Border>
-                                </Grid>
+                                MouseDown="Item_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                </Grid.ColumnDefinitions>
 
-                                <!-- ZWEITE REIHE: URL -->
-                                <TextBlock Text="{Binding Url}"
-                           Foreground="LightGray"
-                           FontSize="12"
-                           Margin="0,5,0,0"
-                           TextTrimming="CharacterEllipsis"
-                           ToolTip="{Binding Url}"/>
+                                <!-- LINK INFO -->
+                                <StackPanel Grid.Column="0" VerticalAlignment="Stretch">
+                                    <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Url}" Foreground="Gray" FontSize="12"/>
 
-                                <!-- DRITTE REIHE: Rename + Delete -->
-                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                    <Border Background="#2E2E2E" CornerRadius="4">
-                                        <TextBox Width="120"
-                                 Text="{Binding Name, Mode=TwoWay}"
-                                 Background="Transparent"
-                                 BorderThickness="0"
-                                 Foreground="White"
-                                 Padding="4"/>
-                                    </Border>
+                                    <!-- ACTIONS -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                        <TextBox Width="120" Text="{Binding Name}" Background="#2E2E2E" Foreground="White"/>
+                                        <Button Content="✔" Margin="5,0" Click="RenameButton_Click"/>
+                                        <Button Content="Delete" Background="#FF4444" Foreground="White" Click="DeleteButton_Click"/>
+                                    </StackPanel>
 
-                                    <Border Background="#3A85FF" CornerRadius="4" Margin="5,0,0,0">
-                                        <Button Content="✔"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Foreground="White"
-                                Padding="6,2"
-                                Cursor="Hand"
-                                Click="RenameButton_Click"/>
-                                    </Border>
-
-                                    <Border Background="#FF4444" CornerRadius="4" Margin="10,0,0,0">
-                                        <Button Content="Delete"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Foreground="White"
-                                Padding="6,2"
-                                Cursor="Hand"
-                                Click="DeleteButton_Click"/>
-                                    </Border>
+                                    <!-- TAGS -->
+                                    <ItemsControl ItemsSource="{Binding Tags}" Margin="0,6,0,0">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource TagStyle}">
+                                                    <TextBlock Text="{Binding}" Foreground="White" FontSize="11"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
 
-                            </StackPanel>
+                                <!-- THUMBNAIL -->
+                                <Image Grid.Column="1"
+                                       Source="{Binding ThumbnailUrl}"
+                                       Width="120"
+                                       Height="68"
+                                       VerticalAlignment="Top"
+                                       Margin="5,0,0,0"/>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
 
             </ListView>
 
-        </DockPanel>
+            <!-- BOTTOM BAR -->
+            <StackPanel Grid.Row="2" Margin="0,10,0,0">
+
+                <StackPanel Orientation="Horizontal">
+
+                    <TextBox Name="NameTextBox"
+                             Width="90"
+                             Background="#2E2E2E"
+                             Foreground="White"
+                             Margin="0,0,5,0"
+                             Padding="5"
+                             Text="Name"/>
+
+                    <TextBox Name="UrlTextBox"
+                             Width="160"
+                             Background="#2E2E2E"
+                             Foreground="White"
+                             Margin="0,0,5,0"
+                             Padding="5"
+                             Text="https://"/>
+
+                    <TextBox Name="TagsTextBox"
+                             Width="80"
+                             Background="#2E2E2E"
+                             Foreground="White"
+                             Margin="0,0,5,0"
+                             Padding="5"
+                             Text="tag1, tag2"/>
+
+                    <Button Content="Add"
+                            Width="60"
+                            Height="30"
+                            Background="#3A85FF"
+                            Foreground="White"
+                            Click="AddButton_Click"/>
+                </StackPanel>
+
+                <Button Content="Clear All"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Background="#FF4444"
+                        Foreground="White"
+                        Margin="0,5,0,0"
+                        Click="ClearButton_Click"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
