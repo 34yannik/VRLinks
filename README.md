@@ -24,19 +24,14 @@ The main interface provides quick access to your collections and links.
 
 ## Installation
 
-### Prerequisites
-* **Python 3.11** or higher is required.
+### Download
+Download the latest version here:  
+https://github.com/34yannik/VRLinks/releases/latest
 
 ### Steps
-1. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Launch the application:**
-   ```bash
-   python main.py
-   ```
+1. Open the link above
+2. Download the `.exe` from the **Assets** section
+3. Run the application — no installation required
 
 ---
 
